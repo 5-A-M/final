@@ -7,7 +7,7 @@ import { UserContext } from "../../../../../App";
 import MARK_STAR from "../../../../../docs/graphql/mutation/mark_star";
 import { useState } from "react";
 import { CircularProgress, Tooltip } from "@mui/material";
-import _ from "lodash"
+import _ from "lodash";
 
 const Summary = (props) => {
   const { user } = useContext(UserContext);
@@ -69,10 +69,22 @@ const NotLearn = (props) => {
         </div>
         <br />
         {props?.list_question?.length > 0 &&
-            _.differenceWith(props?.list_question?.map(item=> item?.id_question)?.toString()?.split(","), props?.USER_LEARNING_TERM?.map((item)=> item?.id_question).toString()?.split(","), _.isEqual)
-            ?.map((item, key) => (
-              <ComponentNotLearn list_question={props?.list_question} key={key} id_question={item}></ComponentNotLearn>
-            ))}
+          _.differenceWith(
+            props?.list_question
+              ?.map((item) => item?.id_question)
+              ?.toString()
+              ?.split(","),
+            props?.USER_LEARNING_TERM?.map((item) => item?.id_question)
+              .toString()
+              ?.split(","),
+            _.isEqual
+          )?.map((item, key) => (
+            <ComponentNotLearn
+              list_question={props?.list_question}
+              key={key}
+              id_question={item}
+            ></ComponentNotLearn>
+          ))}
       </div>
     );
   } else {
@@ -96,12 +108,27 @@ export const ComponentLearn = (props) => {
     setIsStar(() => props.is_star);
   }, [props.is_star]);
   return (
-    <div className="cp-learn" style={{backgroundColor: "#dddddd"}}>
-      <div className="q-learn">{props?.answer}</div>
+    <div
+      className="cp-learn"
+      style={{ backgroundColor: "#dddddd", height: "auto" }}
+    >
+      <div
+        style={{ display: "block", flex: "1 1 0" }}
+        className="dsjkhdajklsjdas"
+      >
+        <div className="q-learn">{props?.answer}</div>
+        {props?.question
+          ?.split("\n")
+          ?.slice(1, props?.question?.split("\n")?.length)
+          ?.map((item, key) => (
+            <div key={item} className="fdjkdsjkldasa">
+              {item}
+            </div>
+          ))}
+      </div>
       <strong>|</strong>
       <div className="a-learn">{props?.question?.split("\n")[0]?.trim()}</div>
-      {
-        props?.notLogin !== true &&
+      {props?.notLogin !== true && (
         <Tooltip
           title={<div>{isStar === true ? "remove star" : "mark star"}</div>}
         >
@@ -118,26 +145,52 @@ export const ComponentLearn = (props) => {
             ></StarIcon>
           </div>
         </Tooltip>
-      }
+      )}
     </div>
   );
 };
 
-const ComponentNotLearn= (props)=> {
+const ComponentNotLearn = (props) => {
   // eslint-disable-next-line
   const { user } = useContext(UserContext);
   // eslint-disable-next-line
   return (
     <>
-      {
-        props?.list_question?.filter((item ,key)=> item?.id_question?.toString() === props?.id_question.toString())?.map((item, key)=> <div key={key} className="cp-learn" style={{backgroundColor: "#dddddd"}}>
-        <div className="q-learn">{item?.answer}</div>
-        <strong>|</strong>
-        <div className="a-learn">{item?.question?.split("\n")[0]?.trim()}</div>
-      </div>)
-      }
+      {props?.list_question
+        ?.filter(
+          (item, key) =>
+            item?.id_question?.toString() === props?.id_question.toString()
+        )
+        ?.map((item, key) => (
+          <div
+            key={key}
+            className="cp-learn"
+            style={{ backgroundColor: "#dddddd", height: 'auto' }}
+          >
+            <div
+              style={{ display: "block", flex: "1 1 0", height: "auto" }}
+              className="dsjkhdajklsjdas"
+            >
+              <div className="q-learn" style={{ height: "auto" }}>
+                {item?.answer}
+              </div>
+              {item?.question
+                ?.split("\n")
+                ?.slice(1, props?.question?.split("\n")?.length)
+                ?.map((item1, key) => (
+                  <div key={key} className="fdjkdsjkldasa">
+                    {item1}
+                  </div>
+                ))}
+            </div>
+            <strong>|</strong>
+            <div className="a-learn">
+              {item?.question?.split("\n")[0]?.trim()}
+            </div>
+          </div>
+        ))}
     </>
   );
-}
+};
 
 export default Summary;

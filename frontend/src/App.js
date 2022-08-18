@@ -5,8 +5,8 @@ import Home from "./Components/Home/Home";
 import NotFound404 from "./Components/NotFound/NotFound404";
 import USERLOGIN from "./docs/graphql/query/user_login";
 import { persistanceLogin } from "./Firebase/function/persistance";
+import Admin from "./Components/Admin/Admin"
 const Bot= lazy(()=> import("./Components/Bot/Bot"))
-const Admin= lazy(()=> import("./Components/Admin/Admin"))
 const LoginPage= lazy(()=> import("./Components/LoginPage/LoginPage"))
 
 export const UserContext = createContext();

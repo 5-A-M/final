@@ -1,4 +1,5 @@
 import React from "react";
+import CreateAnswer from "./Component/CreateAnswer";
 import CreateQuestion from "./Component/CreateQuestion";
 
 const CreateQuizMain = (props) => {
@@ -17,6 +18,7 @@ const CreateQuizMain = (props) => {
         style={{ width: "100%", maxWidth: 1160, padding: 10, borderRadius: 10 }}
       >
         <CreateQuestion />
+        <CreateAnswer />
       </div>
     </div>
   );

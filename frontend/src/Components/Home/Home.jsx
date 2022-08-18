@@ -11,7 +11,6 @@ import { NeedAuthenticate } from '../NeedAuthenticate/NeedAuthenticate'
 import NotFound404 from '../NotFound/NotFound404'
 import MainProfile from '../Profile/MainProfile'
 import Search from '../NavigationResponsive/Search/Search'
-import Settings from '../Settings/Settings'
 import SkeletonAuth from '../SkeletonApp/SkeletonAuth'
 import Classes from './Classes/Classes'
 import DetailClass from './Classes/Components/DetailClass/DetailClass'
@@ -21,6 +20,7 @@ import EditTerm from '../EditTerm/EditTerm'
 import CreateQuiz from '../Admin/Components/CreateQuiz/CreateQuiz'
 import CreateQuizMain from '../Admin/Components/CreateQuiz/CreateQuizMain/CreateQuizMain'
 const Activities= lazy(()=> import('./Activities/Activities'))
+const Settings= lazy(()=> import('../Settings/Settings'))
 
 const Home = (props) => {
   const location= useLocation()
@@ -69,7 +69,6 @@ const Home = (props) => {
                 <Route path="/activities/*" element={<Suspense fallback={<div>Loading...</div>}><Activities /></Suspense>} ></Route>
                 <Route path="/classes/*" element={<Classes></Classes>}></Route>
                 <Route path="/create-set" element={<CreateSet></CreateSet>}></Route>
-                <Route path="/create-quiz" element={<></>}></Route>
                 <Route path="/create-class" element={<CreateClass></CreateClass>}></Route>
                 <Route path="/term/:id_term/:title_term/*" element={<Term></Term>}></Route>
                 <Route path="/join/class/:code_invite" element={<JoinClass></JoinClass>}></Route>
@@ -89,7 +88,7 @@ const Home = (props) => {
               </>
             }
             <Route path="/class/:id_class/*" element={<DetailClass></DetailClass>}></Route>
-            <Route path="/settings" element={<Settings></Settings>}></Route>
+            <Route path="/settings" element={<Suspense fallback={<></>}><Settings></Settings></Suspense>}></Route>
             <Route path="/search" element={<Search></Search>}></Route>
             <Route path="/profile/:id_user/*" element={<MainProfile></MainProfile>}></Route>
             <Route path="/*" element={<NotFound404></NotFound404>}></Route>
