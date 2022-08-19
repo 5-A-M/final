@@ -8,7 +8,7 @@ import "./style.sass"
 import Live from '../../../../Live/Live';
 
 const Navigation = (props) => {
-  const array_navigation= [{icon: <HomeIcon />, link: "", text: "home"}, {icon: <LocalActivityIcon />, link: "activities", text: "activities"}, {icon: <GroupIcon />, link: "classes", text: "classes"}, {icon: <LiveTvIcon />}]
+  const array_navigation= [{icon: <HomeIcon />, link: "", text: "home"}, {icon: <LocalActivityIcon />, link: "activities", text: "activities"}, {icon: <GroupIcon />, link: "classes", text: "classes"}]
   return (
     <div className="menu-navigation">
       {
