@@ -19,6 +19,7 @@ import { isMobile } from "react-device-detect"
 import EditTerm from '../EditTerm/EditTerm'
 import CreateQuiz from '../Admin/Components/CreateQuiz/CreateQuiz'
 import CreateQuizMain from '../Admin/Components/CreateQuiz/CreateQuizMain/CreateQuizMain'
+import Live from '../Live/Live'
 const Activities= lazy(()=> import('./Activities/Activities'))
 const Settings= lazy(()=> import('../Settings/Settings'))
 
@@ -88,11 +89,11 @@ const Home = (props) => {
               </>
             }
             <Route path="/class/:id_class/*" element={<DetailClass></DetailClass>}></Route>
-            <Route path="/settings" element={<Suspense fallback={<></>}><Settings></Settings></Suspense>}></Route>
+            <Route path="/settings" element={<Suspense fallback={<></>}><Settings/></Suspense>}></Route>
             <Route path="/search" element={<Search></Search>}></Route>
-            <Route path="/profile/:id_user/*" element={<MainProfile></MainProfile>}></Route>
-            <Route path="/*" element={<NotFound404></NotFound404>}></Route>
-
+            <Route path="/profile/:id_user/*" element={<MainProfile />}></Route>
+            <Route path="/*" element={<NotFound404 />}></Route>
+            <Route path="/live/*" element={<Live />} />
           </Routes>
         
         </>
