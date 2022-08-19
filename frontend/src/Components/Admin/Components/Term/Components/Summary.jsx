@@ -116,18 +116,23 @@ export const ComponentLearn = (props) => {
         style={{ display: "block", flex: "1 1 0" }}
         className="dsjkhdajklsjdas"
       >
-        <div className="q-learn">{props?.answer}</div>
-        {props?.question
-          ?.split("\n")
-          ?.slice(1, props?.question?.split("\n")?.length)
-          ?.map((item, key) => (
-            <div key={item} className="fdjkdsjkldasa">
-              {item}
-            </div>
-          ))}
+        <div className="a-learn">
+          {props?.question?.split("\n")[0]?.trim()}
+          {props?.question
+            ?.split("\n")
+            ?.slice(1, props?.question?.split("\n")?.length)
+            ?.map((item, key) => (
+              <div key={item} className="fdjkdsjkldasa">
+                {item}
+              </div>
+            ))}
+        </div>
       </div>
       <strong>|</strong>
-      <div className="a-learn">{props?.question?.split("\n")[0]?.trim()}</div>
+      <div className="q-learn" style={{ flex: "1 1 0", textAlign: "center" }}>
+        {props?.answer}
+      </div>
+
       {props?.notLogin !== true && (
         <Tooltip
           title={<div>{isStar === true ? "remove star" : "mark star"}</div>}
@@ -165,14 +170,14 @@ const ComponentNotLearn = (props) => {
           <div
             key={key}
             className="cp-learn"
-            style={{ backgroundColor: "#dddddd", height: 'auto' }}
+            style={{ backgroundColor: "#dddddd", height: "auto" }}
           >
             <div
-              style={{ display: "block", flex: "1 1 0", height: "auto" }}
+              style={{ display: "block", flex: "1 1 0", height: "auto", padding: "0 32px" }}
               className="dsjkhdajklsjdas"
             >
               <div className="q-learn" style={{ height: "auto" }}>
-                {item?.answer}
+                {item?.question?.split("\n")[0]?.trim()}
               </div>
               {item?.question
                 ?.split("\n")
@@ -184,9 +189,7 @@ const ComponentNotLearn = (props) => {
                 ))}
             </div>
             <strong>|</strong>
-            <div className="a-learn">
-              {item?.question?.split("\n")[0]?.trim()}
-            </div>
+            <div className="a-learn" style={{textAlign: "center"}}>{item?.answer}</div>
           </div>
         ))}
     </>
