@@ -260,7 +260,7 @@ const ComponentWrongAnswer = (props) => {
           arrayIdWrongAnswer={props.arrayIdWrongAnswer}
           currentPage={parseInt(props?.currentPage)}
           {...props}
-          countCorrectAnswer={countCorrectWrongAgain}
+          countCorrectAnswer={countCorrectWrongAgain + parseInt(props?.countCorrectAnswer)}
 
         ></ComponentSummary>
       )} 
