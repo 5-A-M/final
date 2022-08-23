@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect, useRef } from 'react'
 
 const Live = () => {
+  const ref= useRef()
+  useEffect(()=> {
+   
+  }, [])
   return (
-    <div>Live</div>
+    <div ref={ref} className="dksldkalskaewa">
+      {
+        console.log(window.history.back(-1))
+      }
+    </div>
   )
 }
 

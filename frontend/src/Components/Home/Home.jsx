@@ -20,6 +20,7 @@ import EditTerm from '../EditTerm/EditTerm'
 import CreateQuiz from '../Admin/Components/CreateQuiz/CreateQuiz'
 import CreateQuizMain from '../Admin/Components/CreateQuiz/CreateQuizMain/CreateQuizMain'
 import Live from '../Live/Live'
+import Relax from '../Relax/Relax'
 const Activities= lazy(()=> import('./Activities/Activities'))
 const Settings= lazy(()=> import('../Settings/Settings'))
 
@@ -94,6 +95,7 @@ const Home = (props) => {
             <Route path="/profile/:id_user/*" element={<MainProfile />}></Route>
             <Route path="/*" element={<NotFound404 />}></Route>
             <Route path="/live/*" element={<Live />} />
+            <Route path="/relax/*" element={<Relax />} />
           </Routes>
         
         </>

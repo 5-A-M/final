@@ -144,17 +144,8 @@ const ComponentWrongAnswer = (props) => {
   const [countAnswerAgain, setCountAnswerAgain] = useState(() => 0);
   const [correctAnswer, setCorrectAnswer] = useState(() => undefined);
   const [listQuestionWrong, setListQuestionWrong] = useState(() => []);
-  const wait = (ms) => new Promise((rel) => setTimeout(rel, ms));
+  const [countCorrectWrongAgain, setCountCorrectWrongAgain]= useState(()=> 0)
   const ref = useRef();
-  useEffect(() => {
-    (async () => {
-      document.body.style.overflow = "hidden";
-      ref.current.classList.add("saadfsdfsdsfsdf");
-      await wait(250);
-      ref.current?.classList?.remove("saadfsdfsdsfsdf");
-      document.body.style.overflow = "auto";
-    })();
-  }, [props?.currentPage]);
   useEffect(() => {
     setListQuestionWrong(() =>
       props?.get_term?.list_question?.filter(
@@ -162,10 +153,11 @@ const ComponentWrongAnswer = (props) => {
       )
     );
   }, [props?.get_term?.list_question, props?.arrayIdWrongAnswer]);
+  
   return (
     <>
       {parseInt(props?.get_term?.count_question) !==
-        parseInt(countAnswerAgain) + parseInt(props?.countCorrectAnswer) && (
+        (parseInt(countAnswerAgain) + parseInt(props?.countCorrectAnswer)) ? (
         <div
           className="w-learn"
           data-index={props?.index}
@@ -181,7 +173,10 @@ const ComponentWrongAnswer = (props) => {
               <div className="tm-learn">Definition</div>
               <div className="q-learn">
                 {
-                  listQuestionWrong[props?.currentPage]?.question?.split(
+                  console.log(listQuestionWrong[parseInt(props?.currentPage)]?.question)
+                }
+                {
+                  listQuestionWrong[parseInt(props?.currentPage)]?.question?.split(
                     "\n"
                   )[0]
                 }
@@ -190,23 +185,26 @@ const ComponentWrongAnswer = (props) => {
             <div className="a-learn">
               <div className="taoijsddada">Choose correct answer</div>
               <div className="w-answer">
-                {listQuestionWrong[props?.currentPage]?.question
+                {listQuestionWrong[parseInt(props?.currentPage)]?.question
                   ?.split("\n")
                   ?.slice(1, 5)
                   ?.map((item, key) => (
                     <Component1
+                      setCountCorrectWrongAgain={setCountCorrectWrongAgain}
+                      isNotAnswerAgain={true}
                       setCountAnswerAgain={setCountAnswerAgain}
                       arrayIdWrongAnswer={props.arrayIdWrongAnswer}
                       setArrayIdWrongAnswer={props.setArrayIdWrongAnswer}
                       {...props}
                       setCountCorrectAnswer={props?.setCountCorrectAnswer}
-                      currentPage={props?.currentPage}
+                      currentPage={parseInt(props?.currentPage)}
                       setCurrentPage={props?.setCurrentPage}
                       setCorrectAnswer={setCorrectAnswer}
-                      answer={listQuestionWrong[props?.currentPage]?.answer}
+                      answer={listQuestionWrong[parseInt(props?.currentPage)]?.answer}
                       id_question={
-                        listQuestionWrong[props?.currentPage]?.id_question
+                        listQuestionWrong[parseInt(props?.currentPage)]?.id_question
                       }
+
                       key={key}
                       item={item}
                     ></Component1>
@@ -251,20 +249,21 @@ const ComponentWrongAnswer = (props) => {
             </div>
           )}
         </div>
-      )}
+      ) : <div>.</div>}
       {parseInt(props?.get_term?.count_question) ===
-        parseInt(countAnswerAgain) + parseInt(props?.countCorrectAnswer) && (
+        (parseInt(countAnswerAgain) + parseInt(props?.countCorrectAnswer)) && (
         <ComponentSummary
           isCompleteAgain={true}
           retakeWrongAnswer={props.retakeWrongAnswer}
           setRetakeWrongAnswer={props.setRetakeWrongAnswer}
-          countCorrectAnswer={props.countCorrectAnswer}
-          setCurrentPage={props.setCurrentPage}
+          setCurrentPage={parseInt(props?.currentPage)}
           arrayIdWrongAnswer={props.arrayIdWrongAnswer}
-          currentPage={props.currentPage}
+          currentPage={parseInt(props?.currentPage)}
           {...props}
+          countCorrectAnswer={countCorrectWrongAgain}
+
         ></ComponentSummary>
-      )}
+      )} 
     </>
   );
 };
@@ -738,7 +737,12 @@ const Component1 = (props) => {
       setCorrectAnswer(() => true);
       props?.setCorrectAnswer(() => true);
       await wait(2000);
-      props?.setCountCorrectAnswer((prev) => parseInt(prev) + 1);
+      if(props.isNotAnswerAgain!==true) {
+        props?.setCountCorrectAnswer((prev) => parseInt(prev) + 1);
+      }
+      if(props.isNotAnswerAgain === true ) {
+        props?.setCountCorrectWrongAgain(prev=> parseInt(prev) + 1)
+      }
       props?.setCurrentPage((prev) => parseInt(prev) + 1);
       user_learn_detail_term();
       return;

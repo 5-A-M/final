@@ -1,13 +1,20 @@
 import { useQuery } from "@apollo/client";
-import { createContext, Fragment, lazy, Suspense, useEffect, useState } from "react";
+import {
+  createContext,
+  Fragment,
+  lazy,
+  Suspense,
+  useEffect,
+  useState,
+} from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./Components/Home/Home";
 import NotFound404 from "./Components/NotFound/NotFound404";
 import USERLOGIN from "./docs/graphql/query/user_login";
 import { persistanceLogin } from "./Firebase/function/persistance";
-import Admin from "./Components/Admin/Admin"
-const Bot= lazy(()=> import("./Components/Bot/Bot"))
-const LoginPage= lazy(()=> import("./Components/LoginPage/LoginPage"))
+import Admin from "./Components/Admin/Admin";
+const Bot = lazy(() => import("./Components/Bot/Bot"));
+const LoginPage = lazy(() => import("./Components/LoginPage/LoginPage"));
 
 export const UserContext = createContext();
 const App = (props) => {
@@ -45,7 +52,14 @@ const App = (props) => {
           <Routes>
             <Route path="/*" element={<Home></Home>}></Route>
             {auth === true && (
-              <Route path="/admin/*" element={<Suspense fallback={<></>}><Admin></Admin></Suspense>}></Route>
+              <Route
+                path="/admin/*"
+                element={
+                  <Suspense fallback={<></>}>
+                    <Admin></Admin>
+                  </Suspense>
+                }
+              ></Route>
             )}
             {auth === false && (
               <Route
@@ -53,9 +67,18 @@ const App = (props) => {
                 element={<NotFound404></NotFound404>}
               ></Route>
             )}
-            <Route path="/login" element={<Suspense fallback={<></>}><LoginPage></LoginPage></Suspense>}></Route>
+            <Route
+              path="/login"
+              element={
+                <Suspense fallback={<></>}>
+                  <LoginPage></LoginPage>
+                </Suspense>
+              }
+            ></Route>
           </Routes>
-          <Suspense fallback={<></>}><Bot></Bot></Suspense>
+          <Suspense fallback={<></>}>
+            <Bot></Bot>
+          </Suspense>
         </Router>
       </Fragment>
     </UserContext.Provider>
