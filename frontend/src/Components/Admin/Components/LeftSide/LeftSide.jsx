@@ -72,9 +72,9 @@ const Component= (props)=> {
             <Link to="/create-class" className="navigation">
                 <C1 icon={<GroupIcon></GroupIcon>} text={"Create a class"}></C1>
             </Link>
-            {/* <Link to={"/create-quiz/"+v4()} className="navigation">
+            <Link to={"/create-quiz/"+v4()} className="navigation">
                 <C1 icon={<QuizIcon></QuizIcon>} text={"Create a quiz"}></C1>
-            </Link> */}
+            </Link>
         </div>
     )
 }
