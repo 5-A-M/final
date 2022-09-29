@@ -27,6 +27,7 @@
     "graphql-upload": "^15.0.2",
     "graphql-ws": "^5.9.1",
     "http-errors": "~1.6.3",
+    "https": "^1.0.0",
     "jade": "~1.11.0",
     "moment": "^2.29.3",
     "morgan": "~1.9.1",

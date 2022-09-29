@@ -5,6 +5,7 @@ import logger from "morgan";
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import http from "http";
+import https from "https"
 import dotenv from "dotenv";
 import { Server } from "socket.io";
 import cors from "cors";
@@ -16,6 +17,11 @@ import { makeExecutableSchema } from "@graphql-tools/schema";
 // import { createClient } from "redis"
 import { instrument } from "@socket.io/admin-ui"
 import jade from "jade"
+import fs from "fs"
+
+let privateKey    = fs.readFileSync('./ssl/selfsigned.key', 'utf8');
+let certificate   = fs.readFileSync('./ssl/selfsigned.crt', 'utf8');
+let credentials   = {key: privateKey, cert: certificate};
 
 // import { PubSub } from "graphql-subscriptions";
 // import { WebSocketServer } from "ws";
@@ -24,10 +30,16 @@ process.setMaxListeners(0);
 dotenv.config();
 
 const app = express();
-const server = http.createServer(app);
-const io = new Server(server);
+const httpServer = http.createServer(app);
+const httpsServer= https.createServer(credentials, app)
+const io = new Server(httpServer,{
+  cors: {
+    origin: '*',
+    methods: ['GET', 'POST']
+  }
+});
 instrument(io, {
-    auth: false
+  auth: false
 });
 // const pubClient = createClient({ url: "redis://localhost:6379" });
 // await pubClient.connect()
@@ -48,7 +60,6 @@ async function startServer() {
       };
       return response;
     },
-
     cache: true,
   });
   await apolloServer.start();
@@ -63,8 +74,22 @@ async function startServer() {
 }
 
 io.of("/client").on("connection", (socket) => {
-  console.log(socket.id);
+  // console.log(socket.id);
 });
+
+io.of("/user").on("connection", socket=> {
+  console.log(socket.id)
+  socket.on("handle_audio", data=> {
+    io.emit("handle_from_server", data)
+  })
+})
+
+io.on("connection", socket=> {
+  console.log(socket.id)
+  socket.on("handle_audio", data=> {
+    io.emit("handle_from_server", data)
+  })
+})
 await startServer();
 
 app.engine("html", jade.renderFile)
@@ -94,6 +119,9 @@ app.use(function (err, req, res, next) {
   res.render("error");
 });
 // console.log(process.env.HOST)
-server.listen(process.env.PORT || 4000, () =>
-  console.log("Server run on port 4000")
+httpServer.listen(process.env.PORT || 4000, () =>
+  console.log("Server run on port "+ process.env.PORT || 4000)
 );
+httpsServer.listen(process.env.PORT_SSL || 8443, ()=> {
+  console.log("Server run ssl on port "+ process.env.PORT_SSL || 8443)
+})
