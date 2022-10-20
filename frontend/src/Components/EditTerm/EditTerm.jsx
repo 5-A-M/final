@@ -10,7 +10,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Tooltip } from "@mui/material";
 import DELETE_QUESTION from "../../docs/graphql/mutation/delete_term";
 import ADD_QUESTION from "../../docs/graphql/mutation/add_question";
-import { v4 } from "uuid";
+import { v4 } from "uuid"
 
 const EditTerm = (props) => {
   const { id_term } = useParams();

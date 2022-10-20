@@ -8,8 +8,9 @@ export const SocketContext= createContext()
 const ContainerSocket = ({children}) => { 
   const socketRef= useRef(null)
   useEffect(()=> {
-    socketRef.current= io(`${SERVER_URL}/client`, { transports: ["websocket"] })
+    socketRef.current= io(`${SERVER_URL}`, { transports: ["websocket"] })
   }, [])
+  // eslint-disable-next-line
   const ping= ()=> {
     socketRef.current.emit("hello", {data: "giang"})
     socketRef.current.on("server", (data)=> {
@@ -18,7 +19,7 @@ const ContainerSocket = ({children}) => {
   }
   return (
     <SocketContext.Provider value={{socketRef}}>
-        {children}
+      {children}
     </SocketContext.Provider>
   )
 }

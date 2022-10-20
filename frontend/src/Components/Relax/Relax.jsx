@@ -1,43 +1,35 @@
-import React, { useRef } from 'react'
-import { useState } from 'react'
-import test from  "../../assets/test.mp3"
+import { useRef, useEffect } from 'react'
 import io from "socket.io-client"
-import { useEffect } from 'react'
 import { SERVER_URL } from '../../config/config'
+import { Helmet } from 'react-helmet-async'
+import { Button } from '@mui/material'
+import { Routes, Route, Link } from 'react-router-dom'
+import CreateRelax from './Component/CreateRelax'
+import SpecificRoom from './Component/SpecificRoom'
 
 const Relax = (props) => {
   const socketRef= useRef()
-  const refAudio= useRef()
-  const [play, setPlay]= useState(()=> true)
   useEffect(()=> {
-    socketRef.current= io(`${SERVER_URL}`, {transports: ["websocket", "polling"]})
-    const pushEvent= (event)=> {
-        setPlay(()=> !event)
-    }
-    socketRef.current.on("handle_from_server", event=> {
-        pushEvent(event.play)
-    })
-    socketRef.current.emit("get_new_state")
+    socketRef.current= io(`${SERVER_URL}/user`, {transports: ["websocket", "polling"]})
     return ()=> {
-        socketRef.current.disconnect()
+      socketRef.current.disconnect()
     }
   }, [])
-  useEffect(()=> {
-    if(play === false) {
-      refAudio.current.play()
-    }
-    else {
-      refAudio.current.pause()
-    }
-  }, [play])
-  const handleAudio= ()=> {
-    socketRef.current.emit("handle_audio", {play: play})
-    
-  }
+ 
   return (
     <div className="jksdjhjdfhjkdsklsa">
-        <audio ref={refAudio} src={test}></audio>
-        <button onClick={()=> handleAudio()}>Click</button>
+      <Helmet>
+        <title>Relax</title>
+      </Helmet>
+      <div className={"create-a-relax-room"} style={{padding: 16}}>
+        <Link to={"/relax/c/relax"} style={{textDecoration: "none", color: "#fff"}}>
+          <Button variant={"contained"}>Create relax</Button>
+        </Link>
+      </div>
+      <Routes>
+        <Route path={"/c/relax"} element={<CreateRelax />} />
+        <Route path={"/r/room?roomId="} element={<SpecificRoom />} />
+      </Routes>
     </div>
   )
 }

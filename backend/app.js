@@ -75,6 +75,9 @@ async function startServer() {
 
 io.of("/client").on("connection", (socket) => {
   // console.log(socket.id);
+  socket.on("join-room", (data)=> {
+    console.log(data)
+  })
 });
 
 io.of("/user").on("connection", socket=> {
@@ -82,12 +85,17 @@ io.of("/user").on("connection", socket=> {
   socket.on("handle_audio", data=> {
     io.emit("handle_from_server", data)
   })
+  socket.on("join-room", (data)=> {
+    console.log(data)
+  })
 })
 
 io.on("connection", socket=> {
-  console.log(socket.id)
   socket.on("handle_audio", data=> {
     io.emit("handle_from_server", data)
+  })
+  socket.on("join-room", (data)=> {
+    console.log(data)
   })
 })
 await startServer();
@@ -118,10 +126,13 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.render("error");
 });
+
 // console.log(process.env.HOST)
 httpServer.listen(process.env.PORT || 4000, () =>
   console.log("Server run on port "+ process.env.PORT || 4000)
 );
+
+
 httpsServer.listen(process.env.PORT_SSL || 8443, ()=> {
   console.log("Server run ssl on port "+ process.env.PORT_SSL || 8443)
 })
