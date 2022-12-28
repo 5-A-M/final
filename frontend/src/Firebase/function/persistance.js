@@ -5,7 +5,7 @@ import { fakesleep } from "./fakesleep";
 const auth = getAuth();
 export const persistanceLogin= async (setuser, setauth, setPreLoading)=> {
     setPreLoading(()=> true)
-    await fakesleep(1000)
+    await fakesleep(500)
     onAuthStateChanged(auth, user=> {
         if(user) {
             setauth(()=> true)

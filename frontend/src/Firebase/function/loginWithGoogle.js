@@ -15,7 +15,7 @@ export const loginWithGoogle= async (setuser, setauth, createUser, error)=> {
         const user = result.user;
         setuser((prev)=> ({...prev, displayName: user.displayName, email: user.email, uid: user.uid, photoURL: user.photoURL}))
         await createUser({variables: {
-            uid: user.uid, photoURL: user.photoURL.replace("s96", "s200"), account_name: user.displayName.toLowerCase().replace(" ", "")+"_"+randomInteger(1000, 9999), displayName: user.displayName, class: -1, languages: 1, soundtrack: true, theme_game: 1
+            uid: user.uid, photoURL: user.photoURL.replace("s96", "s200"), account_name: user.displayName.toLowerCase().replace(" ", "")+"_"+randomInteger(1000, 9999), displayName: user.displayName, class: -1, languages: 1, soundtrack: true, theme_game: 1, email: user.email
         }})
         if(error) return console.log(error)
         return setauth(()=> true)

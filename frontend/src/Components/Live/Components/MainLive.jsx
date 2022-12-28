@@ -1,11 +1,11 @@
-import React from 'react'
+  import React from 'react'
 
-const MainLive = (props) => {
-  return (
-    <div className={"main-live"} style={{padding: 16}}>
-        MainLive
-    </div>
-  )
-}
+  const MainLive = (props) => {
+    return (
+      <div className={"main-live"} style={{padding: 16}}>
+          MainLive
+      </div>
+    )
+  }
 
-export default MainLive
+  export default MainLive
