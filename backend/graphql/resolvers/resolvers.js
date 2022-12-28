@@ -1,5 +1,5 @@
 import connection from "../../database/config/init.js"
-import { v4 as uuidv4 } from "uuid"
+import { v4 as uuidv4, v4 } from "uuid"
 import moment from "moment"
 import { fakesleep } from "../../middleware/fake_sleep.js"
 import fs from "fs"
@@ -10,7 +10,15 @@ import DELETE_TERM from "../../controller/DELETE_TERM.js"
 import CHANGE_ROLE_TERM from "../../controller/CHANGE_ROLE_TERM.js"
 import CHANGE_ROLE_MEMBER_CLASS from "../../controller/CHANGE_ROLE_MEMBER_CLASS.js"
 import createQuiz from "../../controller/quiziz/createQuiziz.js"
+import nodemailer from "nodemailer"
 
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'datistpham@gmail.com',
+      pass: 'lqeuvvpbvluvyeug'
+    }
+  });
 export const resolvers= {
     Query: {
         userLogin: async (parent, args, context)=> {
@@ -247,13 +255,37 @@ export const resolvers= {
         QUERY_EDIT_TERM: async (parent, args, context, info)=> {
             const [rows]= await connection.execute("SELECT id_question, id_term, question, answer FROM question_of_term WHERE id_term= ?", [args.id_term])
             return rows
-        }
+        },
+        check_account_valid: async (parent, args, context, info)=> {
+            const code= Math.floor(Math.random() * (999999 - 100000 + 1) + 100000)
+            const [rows]= await connection.execute("SELECT email FROM user WHERE email= ?", [args?.email || ""])
+            if(rows?.length > 0) {
+                await connection.execute("INSERT INTO verify_login(email, verify_code) VALUES(?, ?)", [args?.email || "", code])
+                const mailOptions = {
+                    from: 'datistpham@gmail.com',
+                    to: args?.email,
+                    subject: 'Quiz',
+                    html: `<div>Your code verification is: ${code}</div>`
+                  };
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      console.log(error);
+                    } else {
+                      console.log('Email sent: ' + info.response);
+                    }
+                  });
+                return {is_valid: true}
+            }
+            else {
+                return {is_valid: false}
+            }
+        }, 
     },
 
     Mutation: {
         createUser: async (parent, args, context)=> {
             try {
-                const [rows]= await connection.execute("INSERT INTO `user` (uid, photoURL, account_name, displayName, class, languages, soundtrack, theme_game, time_created) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE uid= VALUES(uid), photoURL= VALUES(photoURL), account_name= VALUES(account_name), displayName= VALUES(displayName), class= VALUES(class), languages= VALUES(languages), soundtrack= VALUES(soundtrack), theme_game= VALUES(theme_game), time_created= VALUES(time_created)", [args.uid, args.photoURL, args.account_name, args.displayName, args.class, args.languages, args.soundtrack, args.theme_game, new Date()  ])
+                const [rows]= await connection.execute("INSERT INTO `user` (uid, photoURL, account_name, displayName, class, languages, soundtrack, theme_game, time_created, email) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE uid= VALUES(uid), photoURL= VALUES(photoURL), account_name= VALUES(account_name), displayName= VALUES(displayName), class= VALUES(class), languages= VALUES(languages), soundtrack= VALUES(soundtrack), theme_game= VALUES(theme_game), time_created= VALUES(time_created), email= VALUES(email)", [args.uid, args.photoURL, args.account_name, args.displayName, args.class, args.languages, args.soundtrack, args.theme_game, new Date(), args.email || "" ])
                 return "success"
             } catch (error) {
                 return console.log(error)
@@ -357,6 +389,7 @@ export const resolvers= {
         CHANGE_ROLE_TERM: CHANGE_ROLE_TERM,
         DELETE_TERM: DELETE_TERM,
         INSERT_TEST: async (parent, args, context, info)=> {
+            // console.log(args)
             const [rows]= await connection.execute("INSERT INTO result_test VALUES(?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE id_test= VALUES(id_test), id_term= VALUES(id_term), id_question= VALUES(id_question), chose_answer= ?, correct_answer= VALUES(correct_answer), id_user= VALUES(id_user)", [args.id_test, args.id_term, args.id_question, args.chose_answer, args.correct_answer, args.id_user, args.chose_answer])
             return { is_insert: true }
         },
@@ -377,6 +410,17 @@ export const resolvers= {
             const [rows]= await connection.execute("INSERT INTO question_of_term VALUES(?, ?, ?, ?)", [args.id_question, args.id_term, args.question, args.answer])
             return { is_add: true }
         }, 
-        createQuiz: createQuiz
+        createQuiz: createQuiz,
+        confirmCode: async(parent, args)=> {
+            const [rows]= await connection.execute("SELECT * FROM verify_login WHERE verify_code= ?", [args.verify_code?.toString() || ""])
+            if(rows.length > 0) {
+                const [rows2]= await connection.execute("SELECT * FROM `user` WHERE email=?", [args.email])
+                await connection.execute("DELETE FROM verify_login WHERE email = ?", [args.email?.toString() || ""])
+                return {...rows2[0], is_verify: true}  
+            }
+            else {
+                return {is_verify: false}
+            }
+        }
     }
 }

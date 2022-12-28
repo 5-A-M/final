@@ -27,7 +27,8 @@ export const typeDefs = gql`
         GET_CATEGORIES: [Category],
         FIND_BY_CATEGORY(category: String): [LearningTerm],
         GET_RESULT_TEST(id_test: String, id_user: String): [ResultTest],
-        QUERY_EDIT_TERM(id_term: String): [QueryEditTerm]
+        QUERY_EDIT_TERM(id_term: String): [QueryEditTerm],
+        check_account_valid(email: String): CheckAccount
     }
     type User {
         uid: String,
@@ -39,7 +40,8 @@ export const typeDefs = gql`
         soundtrack: Boolean,
         theme_game: Int,
         time_created: String,
-        is_update: Boolean
+        is_update: Boolean,
+        email: String
     }
     type Class {
         id_class: String!,
@@ -301,8 +303,15 @@ export const typeDefs = gql`
     type CreateQuiziz {
         is_create: Boolean,
     }
+    type CheckAccount {
+        is_valid: Boolean
+    }
+    type ConfirmCode {
+        is_verify: Boolean,
+        uid: String!, photoURL: String!, account_name: String!, displayName: String!, class: Int!, languages: Int!, soundtrack: Boolean!, theme_game: Int!, email: String!
+    }
     type Mutation {
-        createUser(uid: String!, photoURL: String!, account_name: String!, displayName: String!, class: Int!, languages: Int!, soundtrack: Boolean!, theme_game: Int!): User
+        createUser(uid: String!, photoURL: String!, account_name: String!, displayName: String!, class: Int!, languages: Int!, soundtrack: Boolean!, theme_game: Int!, email: String!): User
         updateUser(uid: String, photoURL: String, account_name: String, displayName: String, class: Int, languages: Int, soundtrack: Boolean, theme_game: Int): User
         createClass(id_class: String!, class_name: String!, description: String!, perform: Boolean!, invite: Boolean!, own_id: String!): Class,
         add_term_to_class(id_class: String!, id_term: String!, own_id: String!, add_by: String!): TermOfClass,
@@ -324,6 +333,7 @@ export const typeDefs = gql`
         UPDATE_ANSWER(id_term: String, id_question: String, answer: String): UpdateTerm,
         DELETE_QUESTION(id_term: String, id_question: String): DeleteTerm,
         ADD_QUESTION(id_term: String, id_question: String, answer: String, question: String): AddQuestion,
-        createQuiz(id_quiziz: String, owner_id: String, titleQuiz: String, categoryQuiz: [String]): CreateQuiziz
+        createQuiz(id_quiziz: String, owner_id: String, titleQuiz: String, categoryQuiz: [String]): CreateQuiziz,
+        confirmCode(email: String, verify_code: String): ConfirmCode
     }
 `;
